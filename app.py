@@ -160,8 +160,8 @@ st.markdown(header_content, unsafe_allow_html=True)
 # Description below the header
 st.markdown("<br>", unsafe_allow_html=True)
 st.write("""
-This web app predicts the 10-year risk of cardiovascular disease (CVD) based on patient data.
-Please enter the patient's information below:
+This app predicts your 10-year risk of cardiovascular disease (CVD) using a machine learning model based on the Framingham Heart Study. 
+Enter your information below to receive your CVD risk and health recommendations.
 """)
 
 # Terms and Conditions Checklist

@@ -115,12 +115,12 @@ if agree_to_terms:
     prevalent_stroke = st.checkbox('Prevalent Stroke')
     prevalent_hyp = st.checkbox('Prevalent Hypertension')
     diabetes = st.checkbox('Diabetes')
-    tot_chol = st.number_input('Total Cholesterol', min_value=100, max_value=600)
-    sys_bp = st.number_input('Systolic Blood Pressure', min_value=80, max_value=300)
-    dia_bp = st.number_input('Diastolic Blood Pressure', min_value=40, max_value=200)
+    tot_chol = st.number_input('Total Cholesterol (mg/dL)', min_value=100, max_value=600)
+    sys_bp = st.number_input('Systolic Blood Pressure (mgHg)', min_value=80, max_value=300)
+    dia_bp = st.number_input('Diastolic Blood Pressure (mgHg)', min_value=40, max_value=200)
     bmi = st.number_input('BMI', min_value=15.0, max_value=50.0)
-    heart_rate = st.number_input('Heart Rate', min_value=40, max_value=200)
-    glucose = st.number_input('Glucose', min_value=40, max_value=400)
+    heart_rate = st.number_input('Heart Rate (BPM)', min_value=40, max_value=200)
+    glucose = st.number_input('Glucose (mg/dL)', min_value=40, max_value=400)
 
     # Prediction button
     if st.button('Predict CVD Risk'):
@@ -175,6 +175,18 @@ if agree_to_terms:
 
         # Display the probability
         st.write(f'Probability of developing CVD: {probability:.2%}')
+
+        # Set a flag in session state to indicate a prediction was made
+        st.session_state['prediction_made'] = True
+
+    # Show "Test Again" button only if a prediction was made
+    if st.session_state.get('prediction_made', False):
+        if st.button('Test Again'):
+            # Clear session state variables
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            # Simulate app reset by reloading the app
+            st.session_state['reload'] = True
 else:
     st.warning("You must agree to the terms and conditions to proceed.")
 

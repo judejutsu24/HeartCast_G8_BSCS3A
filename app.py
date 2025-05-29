@@ -19,9 +19,6 @@ def preprocess_data(data):
     # Handle missing values
     data = data.fillna(data.mean())
     
-    # Encode categorical variables
-    data = pd.get_dummies(data, columns=['male', 'currentSmoker', 'BPMeds', 'prevalentStroke', 'prevalentHyp', 'diabetes'])
-    
     # Normalize continuous variables
     scaler = StandardScaler()
     continuous_cols = ['age', 'cigsPerDay', 'totChol', 'sysBP', 'diaBP', 'BMI', 'heartRate', 'glucose']
@@ -111,6 +108,7 @@ if agree_to_terms:
     st.markdown("### Patient Information")
     age = st.number_input('Age', min_value=18, max_value=100)
     male = st.selectbox('Sex', ['Male', 'Female']) == 'Male'
+    education = st.selectbox('Education Level', [1, 2, 3, 4])
     current_smoker = st.checkbox('Current Smoker')
     cigs_per_day = st.number_input('Cigarettes per Day', min_value=0, max_value=100)
     bp_meds = st.checkbox('On Blood Pressure Medication')
@@ -120,7 +118,7 @@ if agree_to_terms:
     tot_chol = st.number_input('Total Cholesterol', min_value=100, max_value=600)
     sys_bp = st.number_input('Systolic Blood Pressure', min_value=80, max_value=300)
     dia_bp = st.number_input('Diastolic Blood Pressure', min_value=40, max_value=200)
-    bmi = st.number_input('BMI', min_value=15, max_value=50)
+    bmi = st.number_input('BMI', min_value=15.0, max_value=50.0)
     heart_rate = st.number_input('Heart Rate', min_value=40, max_value=200)
     glucose = st.number_input('Glucose', min_value=40, max_value=400)
 
@@ -129,40 +127,38 @@ if agree_to_terms:
         # Prepare input data
         input_data = pd.DataFrame({
             'age': [age],
-            'male': [male],
-            'currentSmoker': [current_smoker],
+            'education': [education],
+            'currentSmoker': [int(current_smoker)],
             'cigsPerDay': [cigs_per_day],
-            'BPMeds': [bp_meds],
-            'prevalentStroke': [prevalent_stroke],
-            'prevalentHyp': [prevalent_hyp],
-            'diabetes': [diabetes],
+            'BPMeds': [int(bp_meds)],
+            'prevalentStroke': [int(prevalent_stroke)],
+            'prevalentHyp': [int(prevalent_hyp)],
+            'diabetes': [int(diabetes)],
             'totChol': [tot_chol],
             'sysBP': [sys_bp],
             'diaBP': [dia_bp],
             'BMI': [bmi],
             'heartRate': [heart_rate],
-            'glucose': [glucose]
+            'glucose': [glucose],
+            'male': [int(male)]
         })
-        
-        # Perform one-hot encoding
-        input_data = pd.get_dummies(input_data, columns=['male', 'currentSmoker', 'BPMeds', 'prevalentStroke', 'prevalentHyp', 'diabetes'])
-        
+
         # Ensure all columns from training are present
         for col in X.columns:
             if col not in input_data.columns:
                 input_data[col] = 0
-        
+
         # Reorder columns to match training data
         input_data = input_data[X.columns]
-        
+
         # Scale the input data
         continuous_cols = ['age', 'cigsPerDay', 'totChol', 'sysBP', 'diaBP', 'BMI', 'heartRate', 'glucose']
         input_data[continuous_cols] = scaler.transform(input_data[continuous_cols])
-        
+
         # Make prediction
         prediction = model.predict(input_data)
         probability = model.predict_proba(input_data)[0][1]
-        
+
         # Display result
         st.subheader('Prediction Result:')
 

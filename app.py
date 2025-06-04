@@ -179,21 +179,38 @@ agree_to_terms = st.checkbox("I agree to the terms and conditions.")
 
 # Input fields
 if agree_to_terms:
-    st.markdown("### Patient Information")
-    age = st.number_input('Age', min_value=20, max_value=79)
-    male = st.selectbox('Sex', ['Male', 'Female']) == 'Male'
     
-    # Education level input with descriptions (without numeric prefixes)
-    education_levels = [
-        'No High School',
-        'HS Degree',
-        'Some College',
-        'College Degree'
-    ]
-    education = st.selectbox(
-        'Education Level',
-        options=education_levels
-    )
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    # --- Column 1: Demographics & Lifestyle ---
+    with col1:
+        st.markdown("#### Demographics & Lifestyle")
+        age = st.number_input('Age', min_value=20, max_value=79)
+        male = st.selectbox('Sex', ['Male', 'Female']) == 'Male'
+        education_levels = [
+            'No High School',
+            'HS Degree',
+            'Some College',
+            'College Degree'
+        ]
+        education = st.selectbox('Education Level', options=education_levels)
+        current_smoker = st.checkbox('Current Smoker')
+        cigs_per_day = st.number_input('Cigarettes per Day', min_value=0, max_value=100)
+        bp_meds = st.checkbox('On Blood Pressure Medication')
+        prevalent_stroke = st.checkbox('Prevalent Stroke')
+        prevalent_hyp = st.checkbox('Prevalent Hypertension')
+        diabetes = st.checkbox('Diabetes')
+
+    # --- Column 2: Clinical Measurements ---
+    with col2:
+        st.markdown("#### Clinical Measurements")
+        tot_chol = st.number_input('Total Cholesterol (mg/dL)', min_value=100, max_value=600)
+        sys_bp = st.number_input('Systolic Blood Pressure (mgHg)', min_value=80, max_value=300)
+        dia_bp = st.number_input('Diastolic Blood Pressure (mgHg)', min_value=40, max_value=200)
+        bmi = st.number_input('BMI', min_value=15.0, max_value=50.0)
+        heart_rate = st.number_input('Heart Rate (BPM)', min_value=40, max_value=200)
+        glucose = st.number_input('Glucose (mg/dL)', min_value=40, max_value=400)
 
     # Map the selected description back to a numeric value
     education_mapping = {
@@ -203,19 +220,6 @@ if agree_to_terms:
         'College Degree': 4
     }
     education = education_mapping[education]  # Convert the selected description to its numeric value
-    
-    current_smoker = st.checkbox('Current Smoker')
-    cigs_per_day = st.number_input('Cigarettes per Day', min_value=0, max_value=100)
-    bp_meds = st.checkbox('On Blood Pressure Medication')
-    prevalent_stroke = st.checkbox('Prevalent Stroke')
-    prevalent_hyp = st.checkbox('Prevalent Hypertension')
-    diabetes = st.checkbox('Diabetes')
-    tot_chol = st.number_input('Total Cholesterol (mg/dL)', min_value=100, max_value=600)
-    sys_bp = st.number_input('Systolic Blood Pressure (mgHg)', min_value=80, max_value=300)
-    dia_bp = st.number_input('Diastolic Blood Pressure (mgHg)', min_value=40, max_value=200)
-    bmi = st.number_input('BMI', min_value=15.0, max_value=50.0)
-    heart_rate = st.number_input('Heart Rate (BPM)', min_value=40, max_value=200)
-    glucose = st.number_input('Glucose (mg/dL)', min_value=40, max_value=400)
 
     # Prediction button
     if st.button('Predict CVD Risk'):
